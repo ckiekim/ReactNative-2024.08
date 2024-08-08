@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { COLOR } from '@/constants/color';
 
-export default function MyButton({ text, onPress, flex, type }) {
+export default function MyButton({ text, onPress, flex, type, isSelected }) {
   const backgroundColor = type === 'reset' ? COLOR.RESET :
                             type === 'operator' ? COLOR.OPERATOR :
                               type === 'num' ? COLOR.NUM : 'transparent';
@@ -14,7 +14,7 @@ export default function MyButton({ text, onPress, flex, type }) {
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
-        borderWidth: 0.2,
+        borderWidth: isSelected ? 1 : 0.2,
         borderColor: 'black'
       }}
     >
