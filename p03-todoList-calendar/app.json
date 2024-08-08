@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "third-calculator",
-    "slug": "third-calculator",
+    "name": "p03-todoList-calendar",
+    "slug": "p03-todoList-calendar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
