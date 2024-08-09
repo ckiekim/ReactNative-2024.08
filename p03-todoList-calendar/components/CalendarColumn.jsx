@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 const columnSize = 38;
 
-export default function CalendarColumn({ text, color, opacity, disabled, onPress, isSelected }) {
+export default function CalendarColumn({ text, color, opacity, disabled, onPress, isSelected, hasTodo }) {
   return (
     <TouchableOpacity 
       disabled={disabled}
@@ -16,7 +16,7 @@ export default function CalendarColumn({ text, color, opacity, disabled, onPress
         borderRadius: columnSize / 2
       }}
     >
-      <Text style={{ color, opacity }}>
+      <Text style={{ color, opacity, fontWeight: hasTodo ? 'bold' : 'normal' }}>
         {text}
       </Text>
     </TouchableOpacity>

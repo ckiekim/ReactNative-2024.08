@@ -2,7 +2,6 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { defaultTodoList } from '../assets/data/mock-todo-list';
 
-
 export default function useTodoList(selectedDate) {
   const [todoList, setTodoList] = useState(defaultTodoList);
   const [input, setInput] = useState('');
@@ -15,6 +14,7 @@ export default function useTodoList(selectedDate) {
       { id: lastId + 1, content: input, date: selectedDate, isSuccess: false }
     ];
     setTodoList(newTodoList);
+    setInput('');
   }
   const removeTodo = (todoId) => {
     const newTodoList = todoList.filter(todo => todo.id !== todoId);
@@ -33,7 +33,8 @@ export default function useTodoList(selectedDate) {
 
   return {
     input, setInput,
-    todoList,   //: todoList.filter(todo => dayjs(selectedDate).isSame(todo.date, 'date')),
+    todoList,
+    filteredTodoList: todoList.filter(todo => dayjs(selectedDate).isSame(todo.date, 'date')),
     addTodo, removeTodo, toggleTodo
   }
 }

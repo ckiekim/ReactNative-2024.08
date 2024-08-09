@@ -17,6 +17,6 @@ export const defaultTodoList = [
     id: 3,
     content: '지인과 식사하기',
     date: dayjs(),
-    isSuccess: false,
+    isSuccess: true,
   },
 ];

@@ -11,8 +11,8 @@ import { getCalendarColumns } from '@/utils/calendar-util';
 const dayColors = ['#e67639', '#2b2b2b', '#2b2b2b', '#2b2b2b', '#2b2b2b', '#2b2b2b', '#5872d1'];
 const dayTexts = '일월화수목금토'.split('');
 
-export default function CalendarForm({
-  selectedDate, setSelectedDate, onPressLeftArrow, showDatePicker, onPressRightArrow, 
+export default function Calendar({
+  todoList, selectedDate, setSelectedDate, onPressLeftArrow, showDatePicker, onPressRightArrow, 
 }) {
   const columns = getCalendarColumns(selectedDate);
 
@@ -20,12 +20,14 @@ export default function CalendarForm({
     const dateText = dayjs(date).get('date');
     const day = dayjs(date).get('day');
     const isCurrentMonth = dayjs(date).isSame(selectedDate, 'month');
+    const hasTodo = todoList.find(todo => dayjs(todo.date).isSame(date, 'date'));
     return (
       <CalendarColumn 
         text={dateText} color={dayColors[day]} 
         opacity={isCurrentMonth ? 1 : 0.4} 
         onPress={() => setSelectedDate(date)}
         isSelected={dayjs(date).isSame(selectedDate, 'date')}
+        hasTodo={hasTodo}
       />
     )
   };
