@@ -20,7 +20,7 @@ export default function Calendar({
     const dateText = dayjs(date).get('date');
     const day = dayjs(date).get('day');
     const isCurrentMonth = dayjs(date).isSame(selectedDate, 'month');
-    const hasTodo = todoList.find(todo => dayjs(todo.date).isSame(date, 'date'));
+    const hasTodo = todoList?.find(todo => dayjs(todo.date).isSame(date, 'date'));
     return (
       <CalendarColumn 
         text={dateText} color={dayColors[day]} 
