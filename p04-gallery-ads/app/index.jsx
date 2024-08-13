@@ -11,8 +11,8 @@ const columnHeight = width / 4;   // aspect-ratio = 4 : 3
 
 export default function HomeScreen() {
   const { 
-    imagesWithAddButton, selectedAlbum, modalVisible, 
-    pickImage, deleteImage, openModal, closeModal,
+    imagesWithAddButton, selectedAlbum, modalVisible, albumTitle,
+    pickImage, deleteImage, openModal, closeModal, setAlbumTitle, addAlbum, onPressHeader,
   } = useGallery();
 
   const renderItem = ({ item: image }) => {
@@ -42,10 +42,14 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <MyDropDownPicker 
+        onPressHeader={onPressHeader}
         selectedAlbumTitle={selectedAlbum.title} 
-        openModal={openModal}
+        openModal={openModal} 
+        />
+      <TextInputModal 
+        modalVisible={modalVisible} closeModal={closeModal} 
+        albumTitle={albumTitle} setAlbumTitle={setAlbumTitle} addAlbum={addAlbum}
       />
-      <TextInputModal modalVisible={modalVisible} closeModal={closeModal} />
       <FlatList 
         data={imagesWithAddButton}
         keyExtractor={(item) => `image-${item.id}`}

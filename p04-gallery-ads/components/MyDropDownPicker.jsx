@@ -2,11 +2,11 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 const headerHeight = 50;
 
-export default function MyDropDownPicker({ selectedAlbumTitle, openModal }) {
-  const onPressAddAlbum = () => {};
+export default function MyDropDownPicker({ onPressHeader, selectedAlbumTitle, openModal }) {
 
   return (
-    <View 
+    <TouchableOpacity 
+      onPress={onPressHeader}
       style={{
         height: headerHeight, justifyContent: 'center', alignItems: 'center'
       }}
@@ -21,6 +21,6 @@ export default function MyDropDownPicker({ selectedAlbumTitle, openModal }) {
       >
         <Text>앨범 추가</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 }
