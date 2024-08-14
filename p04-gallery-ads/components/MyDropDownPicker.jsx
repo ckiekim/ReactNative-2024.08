@@ -4,7 +4,7 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 const headerHeight = 50;
 
 export default function MyDropDownPicker({ 
-  isDropdownOpen, onPressHeader, selectedAlbum, openModal, albums, onPressAlbum
+  isDropdownOpen, onPressHeader, selectedAlbum, openTextInputModal, albums, deleteAlbum, onPressAlbum
 }) {
 
   return (
@@ -20,11 +20,11 @@ export default function MyDropDownPicker({
       >
         <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{selectedAlbum.title}</Text>
         <SimpleLineIcons 
-          name={isDropdownOpen ? 'arrow-down' : 'arrow-up'} 
+          name={isDropdownOpen ? 'arrow-up' : 'arrow-down'} 
           size={12} color="black" style={{ marginLeft: 8 }}
         />
         <TouchableOpacity 
-          onPress={openModal}
+          onPress={openTextInputModal}
           style={{ 
             position: 'absolute', right: 0, height: headerHeight, paddingRight: 10,
             justifyContent: 'center', alignItems: 'center'
@@ -47,7 +47,9 @@ export default function MyDropDownPicker({
             return (
             <TouchableOpacity 
               key={`album-${album.id}`}
+              activeOpacity={1}
               onPress={() => onPressAlbum(album)}
+              onLongPress={() => deleteAlbum(album.id)}
               style={{ paddingVertical: 6, width: '100%', alignItems: 'center', justifyContent: 'center' }}
             >
               <Text style={{ fontWeight: isSelectedAlbum ? 'bold' : 'normal' }}>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Dimensions, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import BigImageModal from '@/components/BigImageModal';
 import MyDropDownPicker from '@/components/MyDropDownPicker';
 import TextInputModal from '@/components/TextInputModal';
 import useGallery from '@/hooks/use-gallery';
@@ -11,11 +12,24 @@ const columnHeight = width / 4;   // aspect-ratio = 4 : 3
 
 export default function HomeScreen() {
   const { 
-    imagesWithAddButton, selectedAlbum, modalVisible, albumTitle, isDropdownOpen, albums,
-    pickImage, deleteImage, openModal, closeModal, setAlbumTitle, addAlbum, onPressHeader,
-    openDropdown, closeDropdown, onPressAlbum,
+    imagesWithAddButton, selectedAlbum, textInputModalVisible, albumTitle, isDropdownOpen, albums, 
+    selectedImage, bigImageModalVisible, showPreviousArrow, showNextArrow,
+    pickImage, deleteImage, openTextInputModal, closeTextInputModal, setAlbumTitle, addAlbum, deleteAlbum,
+    onPressHeader, openDropdown, closeDropdown, onPressAlbum, 
+    selectImage, openBigImageModal, closeBigImageModal, moveToPreviousImage, moveToNextImage, 
   } = useGallery();
-
+  
+  const onPressImage = (image) => {
+    selectImage(image);
+    openBigImageModal();
+  }
+  const onPressLeftArrow = () => {
+    moveToPreviousImage();
+  }
+  const onPressRightArrow = () => {
+    moveToNextImage();
+  }
+  
   const renderItem = ({ item: image }) => {
     if (image.id === -1) {
       return (
@@ -31,7 +45,10 @@ export default function HomeScreen() {
       );
     }
     return (
-      <TouchableOpacity onLongPress={() => deleteImage(image.id)} >
+      <TouchableOpacity 
+        onPress={() => onPressImage(image)}
+        onLongPress={() => deleteImage(image.id)} 
+      >
         <Image 
           source={{ uri: image.uri }} 
           style={{ width: columnWidth, height: columnHeight, }} 
@@ -46,13 +63,26 @@ export default function HomeScreen() {
         isDropdownOpen={isDropdownOpen}
         onPressHeader={onPressHeader}
         selectedAlbum={selectedAlbum} 
-        openModal={openModal} 
+        openTextInputModal={openTextInputModal} 
         albums={albums}
+        deleteAlbum={deleteAlbum}
         onPressAlbum={onPressAlbum}
       />
       <TextInputModal 
-        modalVisible={modalVisible} closeModal={closeModal} 
-        albumTitle={albumTitle} setAlbumTitle={setAlbumTitle} addAlbum={addAlbum}
+        textInputModalVisible={textInputModalVisible} 
+        closeTextInputModal={closeTextInputModal} 
+        albumTitle={albumTitle} 
+        setAlbumTitle={setAlbumTitle} 
+        addAlbum={addAlbum}
+      />
+      <BigImageModal
+        bigImageModalVisible={bigImageModalVisible} 
+        closeBigImageModal={closeBigImageModal}
+        selectedImage={selectedImage}
+        onPressLeftArrow={onPressLeftArrow}
+        onPressRightArrow={onPressRightArrow}
+        showPreviousArrow={showPreviousArrow} 
+        showNextArrow={showNextArrow}
       />
       <FlatList 
         data={imagesWithAddButton}

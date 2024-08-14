@@ -1,13 +1,13 @@
 import { KeyboardAvoidingView, Modal, Platform, Pressable, SafeAreaView, TextInput } from 'react-native';
 
 export default function TextInputModal({ 
-  modalVisible, closeModal, albumTitle, setAlbumTitle, addAlbum
+  textInputModalVisible, closeTextInputModal, albumTitle, setAlbumTitle, addAlbum
 }) {
   const onSubmitEditing = () => {
     if (!albumTitle)
       return;
     addAlbum();
-    closeModal();
+    closeTextInputModal();
     setAlbumTitle('');
   }
 
@@ -15,13 +15,13 @@ export default function TextInputModal({
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible}
+      visible={textInputModalVisible}
     >
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
         style={{ flex: 1 }}
       >
-        <Pressable style={{ flex: 1 }} onPress={closeModal}> 
+        <Pressable style={{ flex: 1 }} onPress={closeTextInputModal}> 
           <SafeAreaView style={{ width: '100%', position: 'absolute', bottom: 0 }}>
             <TextInput 
               value={albumTitle}
