@@ -25,9 +25,9 @@ export default function TextInputModal({
           <SafeAreaView style={{ width: '100%', position: 'absolute', bottom: 0 }}>
             <TextInput 
               value={albumTitle}
-              onChange={setAlbumTitle}
+              onChangeText={setAlbumTitle}
               onSubmitEditing={onSubmitEditing}
-              style={{ width: '100%', padding: 10, borderWidth: 0.5, borderColor: 'lightgrey' }} 
+              style={{ width: '100%', padding: 10, borderWidth: 0.4, borderColor: 'lightgrey' }} 
               placeholder="앨범명을 입력해주세요."
               autoFocus={true}
             />

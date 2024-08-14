@@ -26,7 +26,8 @@ export default function useGallery() {
       const lastId = images.length === 0 ? 0 : images[images.length - 1].id;
       const newImage = {
         id: lastId + 1,
-        uri: result.assets[0].uri
+        uri: result.assets[0].uri,
+        albumId: selectedAlbum.id,
       };
       setImages([
         ...images, newImage
@@ -44,8 +45,9 @@ export default function useGallery() {
     ])
   };
 
+  const filteredImages = images.filter(image => image.albumId === selectedAlbum.id);
   const imagesWithAddButton = [
-    ...images, 
+    ...filteredImages, 
     {
       id: -1, uri: '',
     }
@@ -63,11 +65,20 @@ export default function useGallery() {
   const openDropdown = () => setIsDropdownOpen(true);
   const closeDropdown = () => setIsDropdownOpen(false);
   const onPressHeader = () => {
+    if (isDropdownOpen)
+      closeDropdown();
+    else
+      openDropdown();
+  }
 
+  const onPressAlbum = (album) => {
+    setSelectedAlbum(album);
+    closeDropdown();
   }
 
   return {
-    imagesWithAddButton, selectedAlbum, modalVisible, albumTitle,
+    imagesWithAddButton, selectedAlbum, modalVisible, albumTitle, isDropdownOpen, albums,
     pickImage, deleteImage, openModal, closeModal, setAlbumTitle, addAlbum, onPressHeader,
+    openDropdown, closeDropdown, onPressAlbum
   }
 }
