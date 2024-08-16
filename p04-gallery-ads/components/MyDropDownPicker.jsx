@@ -4,7 +4,7 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 const headerHeight = 50;
 
 export default function MyDropDownPicker({ 
-  isDropdownOpen, onPressHeader, selectedAlbum, openTextInputModal, albums, deleteAlbum, onPressAlbum
+  isDropdownOpen, onPressHeader, selectedAlbum, onPressAddAlbum, albums, deleteAlbum, onPressAlbum
 }) {
 
   return (
@@ -24,7 +24,7 @@ export default function MyDropDownPicker({
           size={12} color="black" style={{ marginLeft: 8 }}
         />
         <TouchableOpacity 
-          onPress={openTextInputModal}
+          onPress={onPressAddAlbum}
           style={{ 
             position: 'absolute', right: 0, height: headerHeight, paddingRight: 10,
             justifyContent: 'center', alignItems: 'center'

@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
 const defaultAlbum = { id: 1, title: '기본' }
+const ASYNC_KEY = {
+  ALBUM: 'album',
+  IMAGE: 'image'
+}
 
 export default function useGallery() {
   const [images, setImages] = useState([]);
@@ -14,6 +19,28 @@ export default function useGallery() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
+  useEffect(() => {
+    initGallery();
+  }, []);
+  async function initGallery() {
+    try {
+      const album = await AsyncStorage.getItem(ASYNC_KEY.ALBUM);
+      if (album) {
+        setAlbums(JSON.parse(album));
+        setSelectedAlbum(albums[0]);
+      } 
+      const image = await AsyncStorage.getItem(ASYNC_KEY.IMAGE);
+      if (image)
+        setImages(JSON.parse(image));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleImageList = newImages => {
+    setImages(newImages);
+    AsyncStorage.setItem(ASYNC_KEY.IMAGE, JSON.stringify(newImages));
+  }
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,8 +49,6 @@ export default function useGallery() {
       aspect: [4, 3],
       quality: 1,
     });
-    // console.log(result);
-
     if (!result.canceled) {
       const lastId = images.length === 0 ? 0 : images[images.length - 1].id;
       const newImage = {
@@ -31,28 +56,22 @@ export default function useGallery() {
         uri: result.assets[0].uri,
         albumId: selectedAlbum.id,
       };
-      setImages([
-        ...images, newImage
-      ]);
+      const newImages = [ ...images, newImage ];
+      handleImageList(newImages);
     }
   };
-
   const deleteImage = (imageId) => {
     Alert.alert('이미지를 삭제하시겠습니까?', '', [
       { style: 'cancel', text: '아니오' },
       { text: '네', onPress: () => {
           const newImages = images.filter(image => image.id !== imageId);
-          setImages(newImages);
+          handleImageList(newImages);
       }}
     ]);
   };
-
   const filteredImages = images.filter(image => image.albumId === selectedAlbum.id);
   const imagesWithAddButton = [
-    ...filteredImages, 
-    {
-      id: -1, uri: '',
-    }
+    ...filteredImages, { id: -1, uri: '', }
   ];
 
   const openTextInputModal = () => setTextInputModalVisible(true);
@@ -60,11 +79,15 @@ export default function useGallery() {
   const openBigImageModal = () => setBigImageModalVisible(true);
   const closeBigImageModal = () => setBigImageModalVisible(false);
   
+  const handleAlbumList = newAlbums => {
+    setAlbums(newAlbums);
+    AsyncStorage.setItem(ASYNC_KEY.ALBUM, JSON.stringify(newAlbums));
+  }
   const addAlbum = () => {
     const newAlbumId = albums[albums.length - 1].id + 1;
     const newAlbum = { id: newAlbumId, title: albumTitle };
     const newAlbums = [ ...albums, newAlbum ];
-    setAlbums(newAlbums);
+    handleAlbumList(newAlbums);
     setSelectedAlbum(newAlbum);
   };
   const deleteAlbum = (albumId) => {
@@ -76,7 +99,7 @@ export default function useGallery() {
       { style: 'cancel', text: '아니오' },
       { text: '네', onPress: () => {
           const newAlbums = albums.filter(album => album.id !== albumId);
-          setAlbums(newAlbums);
+          handleAlbumList(newAlbums);
           setSelectedAlbum(defaultAlbum);
           closeDropdown();
       }}

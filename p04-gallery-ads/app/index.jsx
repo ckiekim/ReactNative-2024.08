@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dimensions, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import BigImageModal from '@/components/BigImageModal';
 import MyDropDownPicker from '@/components/MyDropDownPicker';
@@ -28,6 +28,20 @@ export default function HomeScreen() {
   }
   const onPressRightArrow = () => {
     moveToNextImage();
+  }
+  const onPressWatchAd = () => {
+    console.log('광고 시청');
+  }
+  const onPressAddAlbum = () => {
+    if (albums.length >= 2) {
+      Alert.alert('광고를 시청해야 앨범을 추가할 수 있습니다.', '', [
+        { style: 'cancel', text: '닫기' },
+        { text: '광고 시청', onPress: () => {
+          onPressWatchAd();
+        }}
+      ]);
+    } else 
+      openTextInputModal();
   }
   
   const renderItem = ({ item: image }) => {
@@ -63,7 +77,7 @@ export default function HomeScreen() {
         isDropdownOpen={isDropdownOpen}
         onPressHeader={onPressHeader}
         selectedAlbum={selectedAlbum} 
-        openTextInputModal={openTextInputModal} 
+        onPressAddAlbum={onPressAddAlbum} 
         albums={albums}
         deleteAlbum={deleteAlbum}
         onPressAlbum={onPressAlbum}
