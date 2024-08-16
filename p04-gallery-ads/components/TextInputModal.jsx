@@ -1,4 +1,16 @@
 import { KeyboardAvoidingView, Modal, Platform, Pressable, SafeAreaView, TextInput } from 'react-native';
+import styled from 'styled-components/native';
+
+const StyledPressable = styled.Pressable`
+  flex: 1;
+`;
+const StyledSafeAreaView = styled.SafeAreaView`
+  width: 100%; position: absolute; bottom: 0px;
+`;
+const StyledTextInput = styled.TextInput`
+  width: 100%; padding: 10px; background-color: white;
+  border-width: 0.4px; border-color: lightgrey; 
+`;
 
 export default function TextInputModal({ 
   textInputModalVisible, closeTextInputModal, albumTitle, setAlbumTitle, addAlbum
@@ -12,28 +24,26 @@ export default function TextInputModal({
   }
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={textInputModalVisible}
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
     >
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
-        style={{ flex: 1 }}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={textInputModalVisible}
       >
-        <Pressable style={{ flex: 1 }} onPress={closeTextInputModal}> 
-          <SafeAreaView style={{ width: '100%', position: 'absolute', bottom: 0 }}>
-            <TextInput 
+        <StyledPressable style={{ flex: 1 }} onPress={closeTextInputModal}> 
+          <StyledSafeAreaView>
+            <StyledTextInput 
               value={albumTitle}
               onChangeText={setAlbumTitle}
               onSubmitEditing={onSubmitEditing}
-              style={{ width: '100%', padding: 10, borderWidth: 0.4, borderColor: 'lightgrey' }} 
               placeholder="앨범명을 입력해주세요."
               autoFocus={true}
             />
-          </SafeAreaView>
-        </Pressable>
-      </KeyboardAvoidingView>
-    </Modal>
+          </StyledSafeAreaView>
+        </StyledPressable>
+      </Modal>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,14 +1,11 @@
-import { useState } from 'react';
-import { Alert, Dimensions, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { useEffect } from 'react';
+import { Alert, SafeAreaView, StyleSheet, } from 'react-native';
 
 import BigImageModal from '@/components/BigImageModal';
+import ImageList from '@/components/ImageList';
 import MyDropDownPicker from '@/components/MyDropDownPicker';
 import TextInputModal from '@/components/TextInputModal';
 import useGallery from '@/hooks/use-gallery';
-
-const width = Dimensions.get('screen').width;
-const columnWidth = width / 3;
-const columnHeight = width / 4;   // aspect-ratio = 4 : 3
 
 export default function HomeScreen() {
   const { 
@@ -19,19 +16,14 @@ export default function HomeScreen() {
     selectImage, openBigImageModal, closeBigImageModal, moveToPreviousImage, moveToNextImage, 
   } = useGallery();
   
-  const onPressImage = (image) => {
-    selectImage(image);
-    openBigImageModal();
-  }
-  const onPressLeftArrow = () => {
-    moveToPreviousImage();
-  }
-  const onPressRightArrow = () => {
-    moveToNextImage();
-  }
-  const onPressWatchAd = () => {
-    console.log('광고 시청');
-  }
+  const onPressOpenGallery = () => { pickImage(); }
+  const onPressImage = (image) => { selectImage(image); openBigImageModal(); }
+  const onLongPressImage = (image) => { deleteImage(image); }
+
+  const onPressLeftArrow = () => { moveToPreviousImage(); }
+  const onPressRightArrow = () => { moveToNextImage(); }
+
+  const onPressWatchAd = () => { console.log('광고 시청'); }
   const onPressAddAlbum = () => {
     if (albums.length >= 2) {
       Alert.alert('광고를 시청해야 앨범을 추가할 수 있습니다.', '', [
@@ -44,33 +36,6 @@ export default function HomeScreen() {
       openTextInputModal();
   }
   
-  const renderItem = ({ item: image }) => {
-    if (image.id === -1) {
-      return (
-        <TouchableOpacity 
-          onPress={pickImage}
-          style={{ 
-            width: columnWidth, height: columnHeight, backgroundColor: '#c2c2c2',
-            alignItems: 'center', justifyContent: 'center'
-          }}
-        >
-          <Text style={{ fontWeight: '100', fontSize: 32 }}>+</Text>
-        </TouchableOpacity>
-      );
-    }
-    return (
-      <TouchableOpacity 
-        onPress={() => onPressImage(image)}
-        onLongPress={() => deleteImage(image.id)} 
-      >
-        <Image 
-          source={{ uri: image.uri }} 
-          style={{ width: columnWidth, height: columnHeight, }} 
-        />
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <MyDropDownPicker 
@@ -98,12 +63,11 @@ export default function HomeScreen() {
         showPreviousArrow={showPreviousArrow} 
         showNextArrow={showNextArrow}
       />
-      <FlatList 
-        data={imagesWithAddButton}
-        keyExtractor={(item) => `image-${item.id}`}
-        renderItem={renderItem}
-        numColumns={3}
-        style={{ zIndex: -1 }}
+      <ImageList 
+        imagesWithAddButton={imagesWithAddButton}
+        onPressOpenGallery={onPressOpenGallery}
+        onPressImage={onPressImage}
+        onLongPressImage={onLongPressImage}
       />
     </SafeAreaView>
   );
