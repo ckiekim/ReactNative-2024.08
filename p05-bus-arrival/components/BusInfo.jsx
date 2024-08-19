@@ -6,10 +6,10 @@ import NextBusInfo from './NextBusInfo';
 import { COLOR } from '@/constants/color';
 
 export default function BusInfo({
-  isBookmarked, onPressBookmark, num, numColor, directionDescription,
+  isBookmarked, onPressBookmark, num, numColor, directionDescription, processedNextBusInfos,
 }) {
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', marginBottom: 4 }}>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
         <BookmarkButton
           isBookmarked={isBookmarked} 
@@ -23,19 +23,22 @@ export default function BusInfo({
       </View>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
         <View style={{ flex: 1 }}>
-          <NextBusInfo 
-            hasInfo={true}
-            remainedTimeText={'8분 46초'} 
-            numOfRemainedStops={5} 
-            seatStatusText={'여유'}
-          />
+          {processedNextBusInfos.map((info, index) => (
+            <NextBusInfo 
+              key={`next-bus-info-${index}`}
+              hasInfo={info.hasInfo}
+              remainedTimeText={info.remainedTimeText} 
+              numOfRemainedStops={info.numOfRemainedStops} 
+              seatStatusText={info.seatStatusText}
+            />
+          ))}
           {/* <Text>도착정보 없음</Text> */}
-          <NextBusInfo 
+          {/* <NextBusInfo 
             hasInfo={false}
             remainedTimeText={'21분 5초'} 
             numOfRemainedStops={12} 
             seatStatusText={'여유'}
-          />
+          /> */}
         </View>
         <AlarmButton onPressAlarm={() => {}} style={{ padding: 10 }} />
       </View>
