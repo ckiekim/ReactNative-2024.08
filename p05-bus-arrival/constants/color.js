@@ -12,7 +12,7 @@
  * @property GRAY_4: 섹션타이틀
  */
 export const COLOR = {
-  BUS_B: "#3e589d",
+  BUS_B: "#3e78bd",
   BUS_G: "#72b33e",
   BUS_R: "#e44124",
   YELLOW: "#f7d14a", // 북마크 on

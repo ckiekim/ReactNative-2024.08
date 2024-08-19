@@ -1,55 +1,83 @@
 import { useEffect, useState } from 'react';
-import { Image, StyleSheet, Platform, SafeAreaView, SectionList, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, SectionList, Switch, Text, View, TouchableOpacity, RefreshControl } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import dayjs from 'dayjs';
 
+import BookmarkButton from '@/components/BookmarkButton';
 import BusInfo from '@/components/BusInfo';
 import Margin from '@/components/Margin';
 import { COLOR } from '@/constants/color';
 import { busStop, getSections, getBusNumColorByType, getRemainedTimeText, getSeatStatusText } from '@/assets/data/mockData';
+import useTheme from '@/hooks/use-theme';
 
 export default function HomeScreen() {
   const sections = getSections(busStop.buses);
   const [now, setNow] = useState(dayjs());
-  // const now = dayjs();
+  const [refreshing, setRefreshing] = useState(false);
+  const { isDark, NEW_COLOR, toggleIsDark } = useTheme();
 
+  const onRefresh = () => {
+    console.log('call onRefresh');
+    setRefreshing(true);
+  };
+  useEffect(() => {
+    if (refreshing) {
+      setNow(dayjs());
+      setTimeout(() => {
+        setRefreshing(false);     // API refetch 완료되는 시점
+      }, 300);
+    }
+  }, [refreshing]);
   useEffect(() => {
     const si = setInterval(() => {
       const newNow = dayjs();
       setNow(newNow);
-    }, 10000);
+    }, 5000);
     return () => {      // unmount 될때 실행하는 코드
       clearInterval(si);
     }
   }, []);
 
+  const onPressBusStopBookmark = () => { };
   const ListHeaderComponent = () => (
-    <SafeAreaView style={{ backgroundColor: COLOR.GRAY_3 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
-        <TouchableOpacity style={{ padding: 10 }}>
-          <AntDesign name="left" size={20} color={COLOR.WHITE} />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 10 }}>
-          <AntDesign name="home" size={20} color={COLOR.WHITE} />
-        </TouchableOpacity>
-      </View>
+    <View style={{ backgroundColor: NEW_COLOR.GRAY_3_GRAY_2 }}>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <Margin height={8} />
-        <Text style={{ color: COLOR.WHITE, fontSize: 13 }}>{busStop.id}</Text>
+        <Text style={{ color: NEW_COLOR.WHITE_BLACK, fontSize: 13 }}>{busStop.id}</Text>
         <Margin height={2} />
-        <Text style={{ color: COLOR.WHITE, fontSize: 20 }}>{busStop.name}</Text>
+        <Text style={{ color: NEW_COLOR.WHITE_BLACK, fontSize: 20 }}>{busStop.name}</Text>
         <Margin height={6} />
-        <Text style={{ color: COLOR.GRAY_1, fontSize: 14 }}>{busStop.directionDescription}</Text>
-        <Margin height={16} />
+        <Text style={{ color: NEW_COLOR.GRAY_1_GRAY_4, fontSize: 14 }}>{busStop.directionDescription}</Text>
       </View>
-    </SafeAreaView>
+      <Margin height={16} />
+      <View style={{ flexDirection: 'row', width: '60%', justifyContent: 'space-between', alignSelf: 'center', alignItems: 'center' }}>
+        <BookmarkButton 
+          isBookmarked={true}
+          onPressBookmark={onPressBusStopBookmark}
+          size={24}
+          style={{ borderWidth: 0.3, borderColor: NEW_COLOR.GRAY_1_GRAY_4, borderRadius: 16, padding: 4 }}
+          NEW_COLOR={NEW_COLOR}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Switch
+            value={isDark}
+            onValueChange={toggleIsDark}
+          />
+          <Text style={{ marginLeft: 1, color: NEW_COLOR.WHITE_BLACK }}>
+            {isDark ? 'Dark' : 'Light'} mode
+          </Text>
+        </View>
+      </View>
+      <Margin height={24} />
+    </View>
   );
   const renderSectionHeader = ({ section: { title } }) => (
     <View 
-      style={{ paddingHorizontal: 12, paddingBottom: 5, backgroundColor: COLOR.GRAY_1, 
-      borderTopWidth: 0.5, borderBottomWidth: 0.5, borderTopColor: COLOR.GRAY_2, borderBottomColor: COLOR.GRAY_2 }}
+      style={{ paddingHorizontal: 12, paddingBottom: 5, backgroundColor: NEW_COLOR.GRAY_1_GRAY_4, 
+      borderTopWidth: 0.5, borderBottomWidth: 0.5, 
+      borderTopColor: NEW_COLOR.GRAY_2_GRAY_3, borderBottomColor: NEW_COLOR.GRAY_2_GRAY_3 }}
     >
-      <Text style={{ color: COLOR.GRAY_4, fontSize: 12 }}>{title}</Text>
+      <Text style={{ color: NEW_COLOR.GRAY_4_GRAY_1, fontSize: 12 }}>{title}</Text>
     </View>
   );
   const renderItem = ({ item: bus }) => {
@@ -79,18 +107,44 @@ export default function HomeScreen() {
         numColor={numColor}
         directionDescription={bus.directionDescription}
         processedNextBusInfos={processedNextBusInfos}
+        NEW_COLOR={NEW_COLOR}
       />
     )
   };
+  const ItemSeparatorComponent = () => (
+    <View style={{ width: '100%', height: 1, backgroundColor: NEW_COLOR.GRAY_1_GRAY_4 }} />
+  );
+  const ListFooterComponent = () => (
+    <Margin height={20} />
+  )
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      ...styles.container,
+      backgroundColor: NEW_COLOR.WHITE_BLACK
+    }}>
+      <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: NEW_COLOR.GRAY_3_GRAY_2 }}>
+        <TouchableOpacity style={{ padding: 10 }}>
+          <AntDesign name="left" size={20} color={NEW_COLOR.WHITE_BLACK} />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ padding: 10 }}>
+          <AntDesign name="home" size={20} color={NEW_COLOR.WHITE_BLACK} />
+        </TouchableOpacity>
+      </View>
       <SectionList 
         style={{ flex: 1, width: '100%' }}
         sections={sections}
         ListHeaderComponent={ListHeaderComponent}
         renderSectionHeader={renderSectionHeader}
         renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListFooterComponent={ListFooterComponent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       />
     </View>
   );

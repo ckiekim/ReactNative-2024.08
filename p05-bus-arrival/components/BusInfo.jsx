@@ -2,46 +2,59 @@ import { Text, View } from 'react-native';
 
 import AlarmButton from './AlarmButton';
 import BookmarkButton from './BookmarkButton';
+import Margin from './Margin';
 import NextBusInfo from './NextBusInfo';
 import { COLOR } from '@/constants/color';
 
 export default function BusInfo({
-  isBookmarked, onPressBookmark, num, numColor, directionDescription, processedNextBusInfos,
+  isBookmarked, onPressBookmark, num, numColor, directionDescription, processedNextBusInfos, NEW_COLOR,
 }) {
   return (
-    <View style={{ flexDirection: 'row', marginBottom: 4 }}>
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-        <BookmarkButton
-          isBookmarked={isBookmarked} 
-          onPressBookmark={onPressBookmark}
-          style={{ padding: 10 }}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: numColor, fontSize: 20 }}>{num}</Text>
-          <Text style={{ color: COLOR.GRAY_2, fontSize: 9 }}>{directionDescription} 방향</Text>
+    <View style={{ backgroundColor: NEW_COLOR.WHITE_BLACK }}>
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 0.8, flexDirection: 'row', alignItems: 'center' }}>
+          <BookmarkButton
+            isBookmarked={isBookmarked} 
+            onPressBookmark={onPressBookmark}
+            size={20}
+            style={{ padding: 10 }}
+            NEW_COLOR={NEW_COLOR}
+          />
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: numColor, fontSize: 20 }}>{num}</Text>
+            <Text style={{ color: NEW_COLOR.GRAY_2_GRAY_3, fontSize: 9, marginRight: 4 }}>
+              {directionDescription} 방향
+            </Text>
+          </View>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 1 }}>
+            {processedNextBusInfos.map((info, index) => (
+              <NextBusInfo 
+                key={`next-bus-info-${index}`}
+                hasInfo={info.hasInfo}
+                remainedTimeText={info.remainedTimeText} 
+                numOfRemainedStops={info.numOfRemainedStops} 
+                seatStatusText={info.seatStatusText}
+                NEW_COLOR={NEW_COLOR}
+              />
+            ))}
+            {/* <Text>도착정보 없음</Text> */}
+            {/* <NextBusInfo 
+              hasInfo={false}
+              remainedTimeText={'21분 5초'} 
+              numOfRemainedStops={12} 
+              seatStatusText={'여유'}
+            /> */}
+          </View>
+          <AlarmButton 
+            onPressAlarm={() => {}} 
+            style={{ padding: 10 }} 
+            NEW_COLOR={NEW_COLOR}
+          />
         </View>
       </View>
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ flex: 1 }}>
-          {processedNextBusInfos.map((info, index) => (
-            <NextBusInfo 
-              key={`next-bus-info-${index}`}
-              hasInfo={info.hasInfo}
-              remainedTimeText={info.remainedTimeText} 
-              numOfRemainedStops={info.numOfRemainedStops} 
-              seatStatusText={info.seatStatusText}
-            />
-          ))}
-          {/* <Text>도착정보 없음</Text> */}
-          {/* <NextBusInfo 
-            hasInfo={false}
-            remainedTimeText={'21분 5초'} 
-            numOfRemainedStops={12} 
-            seatStatusText={'여유'}
-          /> */}
-        </View>
-        <AlarmButton onPressAlarm={() => {}} style={{ padding: 10 }} />
-      </View>
+      <Margin height={4} />
     </View>
   );
 }
