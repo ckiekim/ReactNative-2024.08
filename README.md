@@ -23,7 +23,7 @@ React Native Exercise
 - dayjs: npm install dayjs
 
 ### Proj.6 - Translation
-- Localization: npm install i18n-js
+- Localization: npm install i18n-js, expo-localization
 - react-native async storage: npm install @react-native-async-storage/async-storage
 - SplashScreen: npx expo install expo-splash-screen
 - Lottie: npx expo install lottie-react-native
