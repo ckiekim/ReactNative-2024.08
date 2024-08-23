@@ -12,7 +12,7 @@ React Native Exercise
 - DateTimePicker: npx expo install @react-native-community/datetimepicker
 - Modal DateTimePicker: npm install react-native-modal-datetime-picker
 - dayjs: npm install dayjs
-- design iPhones: npm install react-native-iphone-screen-helper
+- design iPhones: npm install react-native-iphone-x-helper
 
 ### Proj.4 - My Gallery
 - Expo ImagePicker: npx expo install expo-image-picker
@@ -23,7 +23,7 @@ React Native Exercise
 - dayjs: npm install dayjs
 
 ### Proj.6 - Translation
-- Localization: npm install i18n-js, expo-localization
+- Localization: npm install i18n-js expo-localization
 - react-native async storage: npm install @react-native-async-storage/async-storage
 - SplashScreen: npx expo install expo-splash-screen
 - Lottie: npx expo install lottie-react-native
